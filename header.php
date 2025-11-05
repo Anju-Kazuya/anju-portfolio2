@@ -1,26 +1,17 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html <?php language_attributes(); ?>>
 <head>
-    <meta charset="UTF-8">
+    <meta charset="<?php bloginfo('charset'); ?>">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="お問い合わせ送信完了">
-    <meta property="og:title" content="送信完了 | Contact | anju-portfolio.com">
-    <meta property="og:description" content="お問い合わせ送信完了">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://anju-portfolio.com/contact-thanks.html">
-    <title>送信完了 | Contact | anju-portfolio.com</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <?php wp_head(); ?>
 </head>
-<body>
+<body <?php body_class(); ?>>
     <!-- ヘッダー -->
     <header class="header">
         <div class="container">
             <div class="header__inner">
                 <h1 class="header__logo">
-                    <a href="index.html">
+                    <a href="<?php echo esc_url(home_url('/')); ?>">
                         <svg class="header__logo-icon" width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <circle cx="16" cy="11" r="6" fill="#059669"/>
                             <circle cx="22" cy="21" r="5" fill="#059669" opacity="0.8"/>
@@ -37,10 +28,27 @@
                 </button>
                 <nav class="header__nav" id="global-nav">
                     <ul class="nav-list">
-                        <li class="nav-list__item"><a href="about.html">About</a></li>
-                        <li class="nav-list__item"><a href="works.html">Works</a></li>
-                        <li class="nav-list__item"><a href="blog.html">Blog</a></li>
-                        <li class="nav-list__item"><a href="contact.html">Contact</a></li>
+                        <?php
+                        $menu_items = array(
+                            array('title' => 'About', 'url' => home_url('/about/')),
+                            array('title' => 'Works', 'url' => home_url('/works/')),
+                            array('title' => 'Blog', 'url' => home_url('/blog/')),
+                            array('title' => 'Contact', 'url' => home_url('/contact/')),
+                        );
+                        
+                        foreach ($menu_items as $item) {
+                            $current_class = '';
+                            $page_slug = strtolower($item['title']);
+                            if (is_page($page_slug) || 
+                                ($item['title'] === 'Blog' && (is_home() || is_single() || is_archive())) ||
+                                ($item['title'] === 'About' && is_page('about')) ||
+                                ($item['title'] === 'Works' && is_page('works')) ||
+                                ($item['title'] === 'Contact' && (is_page('contact') || is_page('contact-thanks')))) {
+                                $current_class = ' class="active"';
+                            }
+                            echo '<li class="nav-list__item"><a href="' . esc_url($item['url']) . '"' . $current_class . '>' . esc_html($item['title']) . '</a></li>';
+                        }
+                        ?>
                         <li class="nav-list__item">
                             <a href="https://www.instagram.com/k_an10.21" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -53,34 +61,4 @@
             </div>
         </div>
     </header>
-
-    <!-- メインコンテンツ -->
-    <main class="main">
-        <section class="section">
-            <div class="container">
-                <div class="thanks-message">
-                    <div class="thanks-message__icon">✓</div>
-                    <h1 class="thanks-message__title">お問い合わせありがとうございました</h1>
-                    <p class="thanks-message__text">
-                        お問い合わせいただき、ありがとうございます。<br>
-                        内容を確認後、担当者よりご連絡させていただきます。
-                    </p>
-                    <div class="thanks-message__buttons">
-                        <a href="index.html" class="btn btn--primary">トップページに戻る</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- フッター -->
-    <footer class="footer">
-        <div class="container">
-            <p class="footer__text">&copy; 2025 安重 一弥. All rights reserved.</p>
-        </div>
-    </footer>
-
-    <script src="js/main.js"></script>
-</body>
-</html>
 
