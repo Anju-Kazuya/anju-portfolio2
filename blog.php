@@ -1,7 +1,7 @@
 <?php
 /**
- * Archive Template
- * ブログ一覧ページテンプレート
+ * Template Name: Blog
+ * Blog ページテンプレート
  */
 
 get_header();
@@ -19,8 +19,21 @@ get_header();
     <section class="section">
         <div class="container">
             <div class="blog-list">
-                <?php if (have_posts()) : ?>
-                    <?php while (have_posts()) : the_post(); ?>
+                <?php
+                // WordPressの投稿を取得
+                // 固定ページテンプレートでは'page'、アーカイブページでは'paged'を使用
+                $paged = get_query_var('paged') ? get_query_var('paged') : (get_query_var('page') ? get_query_var('page') : 1);
+                $blog_query = new WP_Query(array(
+                    'post_type' => 'post',
+                    'posts_per_page' => 3,
+                    'orderby' => 'date',
+                    'order' => 'DESC',
+                    'paged' => $paged
+                ));
+
+                if ($blog_query->have_posts()) :
+                    while ($blog_query->have_posts()) : $blog_query->the_post();
+                ?>
                         <article class="blog-card">
                             <div class="blog-card__image">
                                 <?php if (has_post_thumbnail()) : ?>
@@ -42,21 +55,37 @@ get_header();
                                 <a href="<?php the_permalink(); ?>" class="blog-card__link">続きを読む →</a>
                             </div>
                         </article>
-                    <?php endwhile; ?>
-                <?php else : ?>
+                <?php
+                    endwhile;
+                    wp_reset_postdata();
+                else :
+                ?>
                     <p>ブログ記事がまだありません。</p>
                 <?php endif; ?>
             </div>
 
             <!-- ページネーション -->
-            <?php
-            the_posts_pagination(array(
-                'mid_size' => 2,
-                'prev_text' => '« 前へ',
-                'next_text' => '次へ »',
-                'screen_reader_text' => 'ページネーション',
-            ));
-            ?>
+            <?php if ($blog_query->max_num_pages > 1) : ?>
+                <div class="pagination">
+                    <?php
+                    // 固定ページテンプレート用のページネーションURL生成
+                    $current_url = get_permalink();
+                    $page_format = (strpos($current_url, '?') !== false) ? '&paged=%#%' : '?paged=%#%';
+                    $base_url = $current_url . $page_format;
+                    
+                    echo paginate_links(array(
+                        'base' => $base_url,
+                        'format' => '',
+                        'current' => max(1, $paged),
+                        'total' => $blog_query->max_num_pages,
+                        'mid_size' => 2,
+                        'prev_text' => '« 前へ',
+                        'next_text' => '次へ »',
+                        'type' => 'list',
+                    ));
+                    ?>
+                </div>
+            <?php endif; ?>
         </div>
     </section>
 </main>

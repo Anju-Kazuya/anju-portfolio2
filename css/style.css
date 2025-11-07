@@ -596,6 +596,17 @@ ul, ol {
     font-weight: 700;
     color: var(--color-text);
     margin-bottom: 1rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.about-content__name-furigana {
+    font-size: 0.5em;
+    font-weight: 300;
+    color: #6B7280;
+    display: inline-block;
 }
 
 .about-content__description {
@@ -789,13 +800,13 @@ ul, ol {
 
 @media (max-width: 767px) {
     .works-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
 
     .works-preview-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1rem;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
     }
 }
 
@@ -890,9 +901,12 @@ ul, ol {
 /* Blogプレビュー（index.html用） */
 .blog-preview-list {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
     margin-bottom: 3rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .blog-card--preview {
@@ -1084,6 +1098,81 @@ ul, ol {
     }
 }
 
+/* WordPressのpaginate_linksデフォルトクラスに対応 */
+.pagination .page-numbers {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.pagination .page-numbers li {
+    display: flex;
+}
+
+.pagination .page-numbers a,
+.pagination .page-numbers span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 40px;
+    height: 40px;
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+    color: var(--color-text);
+    text-decoration: none;
+    border: 1px solid var(--color-bg-gray);
+    border-radius: 4px;
+    background-color: var(--color-bg);
+    transition: all 0.3s ease;
+}
+
+.pagination .page-numbers a:hover {
+    background-color: var(--color-bg-gray);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
+}
+
+.pagination .page-numbers .current {
+    background-color: var(--color-accent);
+    color: #FFFFFF;
+    border-color: var(--color-accent);
+    font-weight: 600;
+}
+
+.pagination .page-numbers .current:hover {
+    background-color: var(--color-accent);
+    color: #FFFFFF;
+    border-color: var(--color-accent);
+}
+
+.pagination .page-numbers .prev,
+.pagination .page-numbers .next {
+    padding: 0.5rem 1.25rem;
+}
+
+@media (max-width: 767px) {
+    .pagination .page-numbers {
+        gap: 0.25rem;
+    }
+
+    .pagination .page-numbers a,
+    .pagination .page-numbers span {
+        min-width: 36px;
+        height: 36px;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .pagination .page-numbers .prev,
+    .pagination .page-numbers .next {
+        padding: 0.5rem 1rem;
+        font-size: 0.85rem;
+    }
+}
+
 /* ============================================
    ブログ記事詳細
    ============================================ */
@@ -1121,8 +1210,8 @@ ul, ol {
 
 .article__hero-image {
     width: 100%;
-    max-width: 100%;
-    margin-bottom: 2rem;
+    max-width: 400px;
+    margin: 0 auto 2rem;
     border-radius: 8px;
     overflow: hidden;
 }
@@ -1136,8 +1225,8 @@ ul, ol {
 
 .article__image {
     width: 100%;
-    max-width: 100%;
-    margin: 2rem 0;
+    max-width: 400px;
+    margin: 2rem auto;
     text-align: center;
 }
 

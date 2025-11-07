@@ -13,7 +13,7 @@ get_header();
     <section class="hero">
         <div class="hero__content">
             <h2 class="hero__title">Anju Kazuya</h2>
-            <p class="hero__subtitle">Port-Folio</p>
+            <p class="hero__subtitle">Portfolio</p>
         </div>
     </section>
 
@@ -52,7 +52,7 @@ get_header();
             <div class="section__image">
                 <img src="<?php echo esc_url(get_template_directory_uri() . '/assets/images/about.jpg'); ?>" alt="About" class="section__img">
             </div>
-            <p class="section__text">プロフィール、スキル、経歴について</p>
+            <p class="section__text">スキル、経歴についてご紹介します。</p>
             <div class="section__button">
                 <a href="<?php echo esc_url(home_url('/about/')); ?>" class="btn btn--link">詳しく見る →</a>
             </div>

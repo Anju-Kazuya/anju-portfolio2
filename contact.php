@@ -6,10 +6,15 @@
 
 get_header();
 
-// メール送信処理
-$result = anju_portfolio_contact_form_handler();
-$errors = isset($result['errors']) ? $result['errors'] : array();
-$error_message = isset($result['error']) ? $result['error'] : '';
+// セッションからエラーメッセージとフォームデータを取得
+$errors = isset($_SESSION['contact_errors']) ? $_SESSION['contact_errors'] : array();
+$error_message = isset($_SESSION['contact_error']) ? $_SESSION['contact_error'] : '';
+$form_data = isset($_SESSION['contact_form_data']) ? $_SESSION['contact_form_data'] : array();
+
+// セッションのエラーデータをクリア（一度表示したら削除）
+unset($_SESSION['contact_errors']);
+unset($_SESSION['contact_error']);
+unset($_SESSION['contact_form_data']);
 ?>
 
 <!-- メインコンテンツ -->
@@ -45,25 +50,25 @@ $error_message = isset($result['error']) ? $result['error'] : '';
                     
                     <div class="form-group">
                         <label for="name" class="form-label">お名前 <span class="required">必須</span></label>
-                        <input type="text" id="name" name="name" class="form-input" value="<?php echo isset($_POST['name']) ? esc_attr($_POST['name']) : ''; ?>" required>
+                        <input type="text" id="name" name="name" class="form-input" value="<?php echo isset($form_data['name']) ? esc_attr($form_data['name']) : (isset($_POST['name']) ? esc_attr($_POST['name']) : ''); ?>" required>
                         <span class="form-error" id="nameError"></span>
                     </div>
 
                     <div class="form-group">
                         <label for="email" class="form-label">メールアドレス <span class="required">必須</span></label>
-                        <input type="email" id="email" name="email" class="form-input" value="<?php echo isset($_POST['email']) ? esc_attr($_POST['email']) : ''; ?>" required>
+                        <input type="email" id="email" name="email" class="form-input" value="<?php echo isset($form_data['email']) ? esc_attr($form_data['email']) : (isset($_POST['email']) ? esc_attr($_POST['email']) : ''); ?>" required>
                         <span class="form-error" id="emailError"></span>
                     </div>
 
                     <div class="form-group">
                         <label for="subject" class="form-label">件名 <span class="required">必須</span></label>
-                        <input type="text" id="subject" name="subject" class="form-input" value="<?php echo isset($_POST['subject']) ? esc_attr($_POST['subject']) : ''; ?>" required>
+                        <input type="text" id="subject" name="subject" class="form-input" value="<?php echo isset($form_data['subject']) ? esc_attr($form_data['subject']) : (isset($_POST['subject']) ? esc_attr($_POST['subject']) : ''); ?>" required>
                         <span class="form-error" id="subjectError"></span>
                     </div>
 
                     <div class="form-group">
                         <label for="message" class="form-label">お問い合わせ内容 <span class="required">必須</span></label>
-                        <textarea id="message" name="message" rows="6" class="form-textarea" required><?php echo isset($_POST['message']) ? esc_textarea($_POST['message']) : ''; ?></textarea>
+                        <textarea id="message" name="message" rows="6" class="form-textarea" required><?php echo isset($form_data['message']) ? esc_textarea($form_data['message']) : (isset($_POST['message']) ? esc_textarea($_POST['message']) : ''); ?></textarea>
                         <span class="form-error" id="messageError"></span>
                     </div>
 

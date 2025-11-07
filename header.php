@@ -29,23 +29,44 @@
                 <nav class="header__nav" id="global-nav">
                     <ul class="nav-list">
                         <?php
+                        // ページスラッグからパーマリンクを解決（パーマリンク設定に依存しない）
+                        function anju_nav_url($slug, $fallback) {
+                            $page = get_page_by_path($slug);
+                            if ($page) {
+                                return get_permalink($page->ID);
+                            }
+                            return home_url($fallback);
+                        }
+
+                        $page_for_posts_id = get_option('page_for_posts');
+                        $blog_url = $page_for_posts_id ? get_permalink($page_for_posts_id) : anju_nav_url('blog', '/blog/');
+
                         $menu_items = array(
-                            array('title' => 'About', 'url' => home_url('/about/')),
-                            array('title' => 'Works', 'url' => home_url('/works/')),
-                            array('title' => 'Blog', 'url' => home_url('/blog/')),
-                            array('title' => 'Contact', 'url' => home_url('/contact/')),
+                            array('title' => 'About', 'url' => anju_nav_url('about', '/about/')),
+                            array('title' => 'Works', 'url' => anju_nav_url('works', '/works/')),
+                            array('title' => 'Blog', 'url' => $blog_url),
+                            array('title' => 'Contact', 'url' => anju_nav_url('contact', '/contact/')),
                         );
                         
                         foreach ($menu_items as $item) {
                             $current_class = '';
-                            $page_slug = strtolower($item['title']);
-                            if (is_page($page_slug) || 
-                                ($item['title'] === 'Blog' && (is_home() || is_single() || is_archive())) ||
-                                ($item['title'] === 'About' && is_page('about')) ||
-                                ($item['title'] === 'Works' && is_page('works')) ||
-                                ($item['title'] === 'Contact' && (is_page('contact') || is_page('contact-thanks')))) {
-                                $current_class = ' class="active"';
+                            
+                            // フロントページの場合はどのメニューもアクティブにしない
+                            if (is_front_page()) {
+                                $current_class = '';
+                            } else {
+                                // フロントページ以外の場合のみアクティブ判定
+                                if ($item['title'] === 'About' && is_page('about')) {
+                                    $current_class = ' class="active"';
+                                } elseif ($item['title'] === 'Works' && is_page('works')) {
+                                    $current_class = ' class="active"';
+                                } elseif ($item['title'] === 'Contact' && (is_page('contact') || is_page('contact-thanks'))) {
+                                    $current_class = ' class="active"';
+                                } elseif ($item['title'] === 'Blog' && (is_home() || is_singular('post') || is_category() || is_tag() || is_date() || is_archive())) {
+                                    $current_class = ' class="active"';
+                                }
                             }
+                            
                             echo '<li class="nav-list__item"><a href="' . esc_url($item['url']) . '"' . $current_class . '>' . esc_html($item['title']) . '</a></li>';
                         }
                         ?>

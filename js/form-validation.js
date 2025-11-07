@@ -89,10 +89,6 @@ document.addEventListener('DOMContentLoaded', function() {
             showError('message', 'お問い合わせ内容を入力してください');
             return false;
         }
-        if (message.length < 10) {
-            showError('message', 'お問い合わせ内容は10文字以上で入力してください');
-            return false;
-        }
         if (message.length > 1000) {
             showError('message', 'お問い合わせ内容は1000文字以内で入力してください');
             return false;
@@ -151,24 +147,19 @@ document.addEventListener('DOMContentLoaded', function() {
     // フォーム送信時のバリデーション
     if (form) {
         form.addEventListener('submit', function(e) {
-            e.preventDefault(); // 一旦送信を止める
-            
             // すべてのバリデーションを実行
-            if (validateAll()) {
-                // バリデーション成功時は送信を許可
-                // 実際の送信処理は後でPHPなどで実装するため、ここではそのまま送信
-                // サーバー側の実装がない場合は、alertで確認
-                if (confirm('この内容で送信しますか？')) {
-                    form.submit();
-                }
-            } else {
-                // バリデーション失敗時は最初のエラーにフォーカス
+            if (!validateAll()) {
+                // バリデーション失敗時は送信を止める
+                e.preventDefault();
+                
+                // 最初のエラーにフォーカス
                 const firstError = form.querySelector('.error');
                 if (firstError) {
                     firstError.focus();
                     firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
             }
+            // バリデーション成功時はそのまま送信を許可（e.preventDefault()を呼ばない）
         });
     }
 });
